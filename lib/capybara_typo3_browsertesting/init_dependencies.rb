@@ -4,56 +4,52 @@ require 'minitest/autorun'
 require 'minitest/pride'
 require 'fileutils'
 require 'capybara/dsl'
-#require "capybara/poltergeist"
-#require "phantomjs"
-
 require 'selenium-webdriver'
 
+timeout = (ENV['CI'] || ENV['CI_SERVER']) ? 60 : 30
+
 Capybara.register_driver :chrome do |app|
-  options = Selenium::WebDriver::Chrome::Options.new(
-    args: %w[headless disable-gpu no-sandbox]
+
+  capabilities = Selenium::WebDriver::Remote::Capabilities.chrome(
+    # This enables access to logs with `page.driver.manage.get_log(:browser)`
+    loggingPrefs: {
+      browser: "ALL",
+      client: "ALL",
+      driver: "ALL",
+      server: "ALL"
+    }
   )
-  Capybara::Selenium::Driver.new(app, browser: :chrome, options: options)
+
+  options = Selenium::WebDriver::Chrome::Options.new
+
+  options.add_argument("window-size=1240,1400")
+
+  # Chrome won't work properly in a Docker container in sandbox mode
+  options.add_argument("no-sandbox")
+
+  # Run headless by default unless CHROME_HEADLESS specified
+  unless ENV['CHROME_HEADLESS'] =~ /^(false|no|0)$/i
+    options.add_argument("headless")
+
+    # Chrome documentation says this flag is needed for now
+    # https://developers.google.com/web/updates/2017/04/headless-chrome#cli
+    options.add_argument("disable-gpu")
+  end
+
+  # Disable /dev/shm use in CI. See https://gitlab.com/gitlab-org/gitlab-ee/issues/4252
+  options.add_argument("disable-dev-shm-usage") if ENV['CI'] || ENV['CI_SERVER']
+
+  Capybara::Selenium::Driver.new(
+    app,
+    browser: :chrome,
+    desired_capabilities: capabilities,
+    options: options
+  )
+
 end
 
-#Capybara.javascript_driver = :chrome
-Capybara.configure do |config|
-  config.javascript_driver = :chrome
-  config.default_driver = :chrome
-  config.ignore_hidden_elements = false
-  config.app_host   = ENV['BASEURL']
-end
-
-
-#Capybara.configure do |config|
-  #config.javascript_driver = :poltergeist
-  #config.default_driver = :poltergeist
-  #config.ignore_hidden_elements = false
-  #config.app_host   = ENV['BASEURL']
-#end
-
-#PHANTOMJS_OPTIONS = [
-  #'--webdriver-logfile=/dev/null',
-  #'--load-images=yes',
-  #'--debug=no',
-  #'--ignore-ssl-errors=yes',
-  #'--ssl-protocol=TLSv1'
-#]
-#PHANTOMJS_URL_BLACKLIST = [
-  #'youtube.com', # the youtube embed player doesn't support phantomjs
-  #'ytimg.com'
-#]
-
-#Capybara.register_driver :poltergeist do |app|
-  #Capybara::Poltergeist::Driver.new(app,
-                                    #debug: false,
-                                    #js_errors: false, # Use true if you are really careful about your site
-                                    #phantomjs_logger: '/dev/null',
-                                    #timeout: 60,
-                                    #:phantomjs_options => PHANTOMJS_OPTIONS,
-                                    #url_blacklist: PHANTOMJS_URL_BLACKLIST,
-                                    #window_size: [1920,1080]
-                                   #)
-#end
-
-
+Capybara.javascript_driver = :chrome
+Capybara.default_max_wait_time = timeout
+Capybara.ignore_hidden_elements = false
+Capybara.app_host = ENV['BASEURL']
+Capybara.default_driver = :chrome

@@ -11,8 +11,8 @@ module CapybaraTypo3Browsertesting
       end
       click_button 't3-login-submit'
 
-      ## voor 6.2 werkt dit
-      assert page.has_selector?('#logout-submit-button')
+      # 7.6
+      assert page.has_selector?('#typo3-cms-backend-backend-toolbaritems-livesearchtoolbaritem')
     end
 
   end

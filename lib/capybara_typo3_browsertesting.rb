@@ -25,7 +25,7 @@ module Minitest
       include Capybara::DSL
 
       def initialize(name = nil)
-        print "\nRunning test case: #{name} "
+        print "\nRunning on #{Capybara.app_host} test case: #{name} "
         @test_name = name
         super(name) unless name.nil?
       end

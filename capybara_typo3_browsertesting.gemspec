@@ -25,8 +25,8 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency "rake", "~> 10.0"
 
   spec.add_runtime_dependency "minitest", "~> 5.0"
-  spec.add_runtime_dependency "minitest-capybara", "~> 0.8"
-  spec.add_runtime_dependency 'capybara', '~> 2.15'
-  spec.add_runtime_dependency 'capybara-screenshot', '~> 1.0.0'
-  spec.add_runtime_dependency 'selenium-webdriver', '~> 3.9'
+  spec.add_runtime_dependency "minitest-capybara"
+  spec.add_runtime_dependency 'capybara'
+  spec.add_runtime_dependency 'capybara-screenshot'
+  spec.add_runtime_dependency 'selenium-webdriver'
 end

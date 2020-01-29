@@ -20,7 +20,7 @@ Capybara.register_driver :chrome do |app|
     }
   )
 
-  client.timeout = 10
+  #client.timeout = 10
 
   options = Selenium::WebDriver::Chrome::Options.new
 

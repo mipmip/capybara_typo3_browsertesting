@@ -10,7 +10,10 @@ timeout = (ENV['CI'] || ENV['CI_SERVER']) ? 60 : 30
 
 Capybara.register_driver :chrome do |app|
 
+  prefs = {"profile.managed_default_content_settings.notifications" => 2}
+
   capabilities = Selenium::WebDriver::Remote::Capabilities.chrome(
+    chrome_options: { prefs: prefs },
     # This enables access to logs with `page.driver.manage.get_log(:browser)`
     loggingPrefs: {
       browser: "ALL",

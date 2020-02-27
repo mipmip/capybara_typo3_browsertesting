@@ -1,3 +1,5 @@
+require 'uri/http'
+
 require "capybara_typo3_browsertesting/version"
 require "capybara_typo3_browsertesting/init_dependencies"
 
@@ -35,7 +37,10 @@ module Minitest
 
       def teardown
         unless passed?
-          page.save_screenshot "test/tmp/testname-#{@test_name}-#{Time.now.strftime('%Y%m%d-%H%M%S')}.png", full: true
+          uri = URI.parse(Capybara.app_host)
+          domain = PublicSuffix.parse(uri.host)
+          system("mkdir -p testout/#{domain}")
+          page.save_screenshot "testout/#{domain}/testname-#{@test_name}-#{Time.now.strftime('%Y%m%d-%H%M%S')}.png", full: true
         end
       end
     end

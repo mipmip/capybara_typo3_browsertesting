@@ -29,4 +29,5 @@ Gem::Specification.new do |spec|
   spec.add_runtime_dependency 'capybara'
   spec.add_runtime_dependency 'capybara-screenshot'
   spec.add_runtime_dependency 'selenium-webdriver'
+  spec.add_runtime_dependency 'mail'
 end

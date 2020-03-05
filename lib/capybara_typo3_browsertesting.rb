@@ -1,11 +1,10 @@
 require 'uri/http'
-
 require "capybara_typo3_browsertesting/version"
 require "capybara_typo3_browsertesting/init_dependencies"
-
 require "capybara_typo3_browsertesting/shared_test_header"
 require "capybara_typo3_browsertesting/shared_test_google_analytics"
 require "capybara_typo3_browsertesting/shared_test_backend"
+require "capybara_typo3_browsertesting/reports"
 
 module CapybaraTypo3Browsertesting
   class << self

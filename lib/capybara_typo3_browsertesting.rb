@@ -39,7 +39,9 @@ module Minitest
           uri = URI.parse(Capybara.app_host)
           domain = PublicSuffix.parse(uri.host)
           system("mkdir -p testout/#{domain}")
-          page.save_screenshot "testout/#{domain}/testname-#{@test_name}-#{Time.now.strftime('%Y%m%d-%H%M%S')}.png", full: true
+          imgname = "testout/#{domain}/testname-#{@test_name}-#{Time.now.strftime('%Y%m%d-%H%M%S')}.png"
+          p imgname
+          page.save_screenshot imgname, full: true
         end
       end
     end
